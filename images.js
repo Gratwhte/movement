@@ -1,4 +1,5 @@
 const IMAGE_PATHS = {
+  favicon: "imgs/logo-small.png",
   logo: "imgs/logo.png",
   hero: "imgs/hero.png",
 
