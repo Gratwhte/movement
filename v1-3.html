@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Movement Barbershop</title>
+  <style>
+    :root{
+      --bg:#f3f3f1;
+      --bg-soft:#e8e8e5;
+      --panel:#ffffff;
+      --panel-2:#f7f7f5;
+      --text:#111111;
+      --muted:#5f5f5f;
+      --line:#d4d4cf;
+
+      --black:#111111;
+      --white:#ffffff;
+      --gray:#cfcfca;
+      --gray-dark:#8a8a84;
+
+      --green:#2f5d46;
+      --green-2:#3f7158;
+      --green-3:#6f8f7e;
+      --leaf:#7fa08f;
+
+      --radius:18px;
+      --shadow:0 14px 40px rgba(0,0,0,.08);
+      --max:1200px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(63,113,88,.08), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(127,160,143,.08), transparent 20%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      letter-spacing: .01em;
+    }
+
+    a{text-decoration:none;color:inherit}
+    img{display:block;max-width:100%}
+    button,input{font:inherit}
+
+    .container{
+      width:min(92%, var(--max));
+      margin:0 auto;
+      position:relative;
+      z-index:2;
+    }
+
+    .logo-img,
+    .hero-img,
+    .barber-img,
+    .gallery-img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .image-frame{
+      position:relative;
+      overflow:hidden;
+      background:
+        linear-gradient(135deg, rgba(63,113,88,.07), rgba(255,255,255,.8)),
+        #f6f6f3;
+    }
+
+    .image-fallback{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      color:var(--muted);
+      font-size:.95rem;
+      padding:20px;
+      border:1px dashed rgba(17,17,17,.18);
+      background:
+        linear-gradient(135deg, rgba(63,113,88,.06), rgba(255,255,255,.75)),
+        repeating-linear-gradient(
+          45deg,
+          rgba(17,17,17,.02) 0 10px,
+          transparent 10px 20px
+        );
+    }
+
+    .leaf-decor{
+      position:absolute;
+      pointer-events:none;
+      opacity:.16;
+      z-index:0;
+      filter: blur(.1px);
+    }
+
+    .leaf-top-right{
+      top:110px;
+      right:10px;
+      width:220px;
+      transform: rotate(-10deg);
+    }
+
+    .leaf-about-left{
+      left:-30px;
+      top:40px;
+      width:180px;
+      transform: rotate(-18deg);
+    }
+
+    .leaf-contact-right{
+      right:-20px;
+      bottom:20px;
+      width:170px;
+      transform: rotate(12deg);
+    }
+
+    .leaf-booking-left{
+      left:-25px;
+      bottom:-20px;
+      width:190px;
+      transform: rotate(8deg);
+    }
+
+    .nav{
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background: rgba(243,243,241,.88);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid rgba(17,17,17,.08);
+    }
+
+    .nav-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:14px 0;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      min-width:0;
+    }
+
+    .brand-logo-horizontal{
+      width:260px;
+      height:64px;
+      border:1px solid rgba(17,17,17,.1);
+      border-radius:12px;
+      overflow:hidden;
+      background:#fff;
+      flex-shrink:0;
+    }
+
+    .brand-logo-horizontal .logo-img{
+      object-fit:contain;
+      background:#fff;
+    }
+
+    .nav-right{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .nav-links a{
+      color:var(--muted);
+      font-size:.94rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      position:relative;
+      transition:.2s ease;
+      font-weight:700;
+    }
+
+    .nav-links a:hover{
+      color:var(--text);
+    }
+
+    .nav-links a::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:-6px;
+      width:0;
+      height:2px;
+      background:var(--green-2);
+      transition:.22s ease;
+    }
+
+    .nav-links a:hover::after{
+      width:100%;
+    }
+
+    .lang-switch{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    .lang-btn{
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(17,17,17,.08);
+      background:#ffffff;
+      color:var(--muted);
+      cursor:pointer;
+      transition:.2s ease;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-size:.8rem;
+      font-weight:700;
+    }
+
+    .lang-btn.active,
+    .lang-btn:hover{
+      color:var(--text);
+      border-color:var(--green-2);
+      background:rgba(63,113,88,.08);
+    }
+
+    .hero{
+      min-height:88vh;
+      display:grid;
+      place-items:center;
+      position:relative;
+      overflow:hidden;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,0)),
+        var(--bg);
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:44px;
+      align-items:center;
+      padding:72px 0 84px;
+    }
+
+    .eyebrow{
+      color:var(--green);
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      font-size:.78rem;
+      font-weight:700;
+      margin-bottom:16px;
+    }
+
+    h1{
+      font-size:clamp(3rem, 7vw, 6rem);
+      line-height:.92;
+      letter-spacing:-.04em;
+      font-weight:900;
+      text-transform:uppercase;
+      margin-bottom:18px;
+    }
+
+    .hero p{
+      color:var(--muted);
+      max-width:620px;
+      font-size:1.05rem;
+      margin-bottom:28px;
+    }
+
+    .hero-actions{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:14px 20px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:transparent;
+      color:var(--text);
+      cursor:pointer;
+      transition:.22s ease;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      font-size:.9rem;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+      border-color:var(--green-2);
+      background:#fff;
+    }
+
+    .btn-primary{
+      background:var(--green);
+      border-color:var(--green);
+      color:#f7fffb;
+    }
+
+    .btn-primary:hover{
+      background:var(--green-2);
+      border-color:var(--green-2);
+    }
+
+    .hero-card{
+      background:linear-gradient(180deg, #ffffff, #f1f1ee);
+      border:1px solid rgba(17,17,17,.08);
+      border-radius:24px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      position:relative;
+    }
+
+    .hero-placeholder{
+      aspect-ratio:4/5;
+      border-radius:18px;
+      border:1px solid rgba(17,17,17,.08);
+      overflow:hidden;
+      position:relative;
+      background:#f6f6f3;
+    }
+
+    section{
+      padding:90px 0;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:20px;
+      flex-wrap:wrap;
+      margin-bottom:34px;
+    }
+
+    .section-head h2{
+      font-size:clamp(2rem, 4vw, 3rem);
+      letter-spacing:-.03em;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+
+    .section-head p{
+      color:var(--muted);
+      max-width:620px;
+    }
+
+    .about-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:22px;
+    }
+
+    .barber-card{
+      background:var(--panel);
+      border:1px solid rgba(17,17,17,.08);
+      border-radius:var(--radius);
+      overflow:hidden;
+      transition:.22s ease;
+      box-shadow:var(--shadow);
+    }
+
+    .barber-card:hover{
+      transform:translateY(-4px);
+      border-color:rgba(63,113,88,.45);
+    }
+
+    .barber-photo{
+      aspect-ratio:4/4.5;
+      border-bottom:1px solid rgba(17,17,17,.06);
+      position:relative;
+      overflow:hidden;
+      background:#f5f5f2;
+    }
+
+    .barber-info{
+      padding:22px;
+    }
+
+    .barber-info h3{
+      font-size:1.4rem;
+      margin-bottom:8px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    .barber-role{
+      color:var(--green);
+      font-size:.88rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:14px;
+      font-weight:700;
+    }
+
+    .quote{
+      color:var(--muted);
+      font-style:italic;
+    }
+
+    .gallery-wrap{
+      background:var(--panel);
+      border:1px solid rgba(17,17,17,.08);
+      border-radius:24px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+
+    .carousel{
+      position:relative;
+      min-height:500px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        radial-gradient(circle at top left, rgba(63,113,88,.09), transparent 24%),
+        #f5f5f2;
+    }
+
+    .slide{
+      display:none;
+      width:100%;
+      padding:32px;
+    }
+
+    .slide.active{
+      display:block;
+    }
+
+    .slide-inner{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:26px;
+      align-items:center;
+    }
+
+    .slide-image{
+      aspect-ratio:16/10;
+      border-radius:18px;
+      border:1px solid rgba(17,17,17,.08);
+      overflow:hidden;
+      position:relative;
+      background:#f7f7f5;
+    }
+
+    .slide-copy h3{
+      font-size:1.7rem;
+      margin-bottom:12px;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+
+    .slide-copy p{
+      color:var(--muted);
+      margin-bottom:16px;
+    }
+
+    .carousel-controls{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:18px 22px 22px;
+      border-top:1px solid rgba(17,17,17,.08);
+      background:rgba(255,255,255,.45);
+    }
+
+    .control-buttons{
+      display:flex;
+      gap:10px;
+    }
+
+    .icon-btn{
+      width:46px;
+      height:46px;
+      border-radius:50%;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .icon-btn:hover{
+      border-color:var(--green-2);
+      color:var(--green-2);
+    }
+
+    .dots{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      border:none;
+      cursor:pointer;
+      background:#c6c6c1;
+    }
+
+    .dot.active{
+      background:var(--green-2);
+      box-shadow:0 0 14px rgba(63,113,88,.18);
+    }
+
+    .contact-grid{
+      display:grid;
+      grid-template-columns:.9fr 1.1fr;
+      gap:22px;
+    }
+
+    .card{
+      background:var(--panel);
+      border:1px solid rgba(17,17,17,.08);
+      border-radius:var(--radius);
+      padding:24px;
+      box-shadow:var(--shadow);
+      position:relative;
+    }
+
+    .info-list{
+      display:grid;
+      gap:16px;
+      margin-top:18px;
+    }
+
+    .info-item{
+      padding:16px;
+      border:1px solid rgba(17,17,17,.06);
+      border-radius:14px;
+      background:rgba(232,232,229,.65);
+    }
+
+    .info-item strong{
+      display:block;
+      margin-bottom:6px;
+      color:var(--green);
+      font-size:.88rem;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+    }
+
+    .map-placeholder{
+      min-height:380px;
+      border-radius:18px;
+      border:1px dashed rgba(17,17,17,.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:20px;
+      color:var(--muted);
+      background:
+        linear-gradient(135deg, rgba(63,113,88,.08), rgba(255,255,255,.85)),
+        #f4f4f1;
+    }
+
+    .booking-grid{
+      display:grid;
+      grid-template-columns:.95fr 1.05fr;
+      gap:22px;
+      align-items:start;
+    }
+
+    .booking-sidebar p{
+      color:var(--muted);
+      margin-top:10px;
+      margin-bottom:20px;
+    }
+
+    .barber-select{
+      display:grid;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .select-btn{
+      text-align:left;
+      padding:16px 18px;
+      border-radius:14px;
+      border:1px solid rgba(17,17,17,.08);
+      background:#fff;
+      color:var(--text);
+      cursor:pointer;
+      transition:.2s ease;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      font-weight:700;
+    }
+
+    .select-btn:hover,
+    .select-btn.active{
+      border-color:rgba(63,113,88,.55);
+      background:rgba(63,113,88,.08);
+    }
+
+    .booking-panel h3{
+      margin-bottom:8px;
+      font-size:1.4rem;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+
+    .booking-panel p{
+      color:var(--muted);
+      margin-bottom:18px;
+    }
+
+    .slot-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .slot{
+      padding:14px 12px;
+      border-radius:14px;
+      border:1px solid rgba(17,17,17,.08);
+      background:#fafaf8;
+      color:var(--text);
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .slot:hover{
+      border-color:var(--green-2);
+    }
+
+    .slot.selected{
+      background:rgba(63,113,88,.12);
+      border-color:var(--green-2);
+      color:var(--text);
+    }
+
+    .slot.booked{
+      opacity:.42;
+      cursor:not-allowed;
+      text-decoration:line-through;
+    }
+
+    .booking-form{
+      display:grid;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .booking-form input{
+      width:100%;
+      padding:14px 15px;
+      border-radius:12px;
+      border:1px solid rgba(17,17,17,.08);
+      background:#fff;
+      color:var(--text);
+      outline:none;
+    }
+
+    .booking-form input:focus{
+      border-color:var(--green-2);
+    }
+
+    .booking-summary{
+      margin-top:16px;
+      padding:14px 16px;
+      border-radius:14px;
+      background:rgba(232,232,229,.55);
+      border:1px solid rgba(17,17,17,.06);
+      color:var(--muted);
+    }
+
+    .success{
+      margin-top:14px;
+      color:var(--green);
+      font-weight:700;
+    }
+
+    footer{
+      padding:28px 0 50px;
+      color:var(--muted);
+      border-top:1px solid rgba(17,17,17,.08);
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      font-size:.84rem;
+      background:rgba(255,255,255,.35);
+    }
+
+    .inline-lang{
+      display:none;
+    }
+
+    .inline-lang.active{
+      display:inline;
+    }
+
+    @media (max-width: 980px){
+      .hero-grid,
+      .slide-inner,
+      .contact-grid,
+      .booking-grid,
+      .about-grid{
+        grid-template-columns:1fr;
+      }
+
+      .leaf-top-right,
+      .leaf-about-left,
+      .leaf-contact-right,
+      .leaf-booking-left{
+        opacity:.11;
+      }
+    }
+
+    @media (max-width: 760px){
+      .nav-inner{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .nav-right{
+        width:100%;
+        justify-content:flex-start;
+      }
+
+      .slot-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      section{
+        padding:72px 0;
+      }
+
+      .brand-logo-horizontal{
+        width:220px;
+        height:56px;
+      }
+    }
+
+    @media (max-width: 520px){
+      .slot-grid{
+        grid-template-columns:1fr;
+      }
+
+      .leaf-top-right,
+      .leaf-about-left,
+      .leaf-contact-right,
+      .leaf-booking-left{
+        display:none;
+      }
+
+      .brand-logo-horizontal{
+        width:180px;
+        height:48px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="#home" class="brand" aria-label="Movement home">
+        <div class="brand-logo-horizontal image-frame">
+          <img id="logoImg" class="logo-img" src="" alt="Movement logo" />
+          <div class="image-fallback" id="logoFallback">Horizontal Logo</div>
+        </div>
+      </a>
+
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="#home">
+            <span class="inline-lang active" data-inline="en">Home</span>
+            <span class="inline-lang" data-inline="hu">Kezdőlap</span>
+          </a>
+          <a href="#about">
+            <span class="inline-lang active" data-inline="en">About Us</span>
+            <span class="inline-lang" data-inline="hu">Rólunk</span>
+          </a>
+          <a href="#gallery">
+            <span class="inline-lang active" data-inline="en">Gallery</span>
+            <span class="inline-lang" data-inline="hu">Galéria</span>
+          </a>
+          <a href="#contact">
+            <span class="inline-lang active" data-inline="en">Contact</span>
+            <span class="inline-lang" data-inline="hu">Kapcsolat</span>
+          </a>
+          <a href="#booking">
+            <span class="inline-lang active" data-inline="en">Booking</span>
+            <span class="inline-lang" data-inline="hu">Foglalás</span>
+          </a>
+        </div>
+
+        <div class="lang-switch">
+          <button class="lang-btn active" data-set-lang="en">EN</button>
+          <button class="lang-btn" data-set-lang="hu">HU</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="home">
+    <svg class="leaf-decor leaf-top-right" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M95 170C108 130 140 94 180 66C162 112 131 151 95 170Z" fill="#3f7158"/>
+      <path d="M78 150C84 113 69 70 37 32C33 77 45 122 78 150Z" fill="#7fa08f"/>
+      <path d="M90 164C96 133 102 104 113 75" stroke="#2f5d46" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow">
+          <span class="inline-lang active" data-inline="en">Black / White / Grey / Natural Accents</span>
+          <span class="inline-lang" data-inline="hu">Fekete / Fehér / Szürke / Természetes részletek</span>
+        </div>
+
+        <h1>
+          <span class="inline-lang active" data-inline="en">Sharp cuts.<br>Clean atmosphere.</span>
+          <span class="inline-lang" data-inline="hu">Éles vágások.<br>Letisztult hangulat.</span>
+        </h1>
+
+        <p>
+          <span class="inline-lang active" data-inline="en">
+            A brighter, more refined barbershop experience with strong typography, premium structure, and subtle botanical green accents.
+          </span>
+          <span class="inline-lang" data-inline="hu">
+            Egy világosabb, kifinomult barber élmény erőteljes tipográfiával, prémium szerkezettel és finom növényi zöld részletekkel.
+          </span>
+        </p>
+
+        <div class="hero-actions">
+          <a href="#booking" class="btn btn-primary">
+            <span class="inline-lang active" data-inline="en">Book Now</span>
+            <span class="inline-lang" data-inline="hu">Foglalj most</span>
+          </a>
+          <a href="#about" class="btn">
+            <span class="inline-lang active" data-inline="en">Meet the Team</span>
+            <span class="inline-lang" data-inline="hu">Ismerd meg a csapatot</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <div class="hero-placeholder image-frame">
+          <img id="heroImg" class="hero-img" src="" alt="Barbershop hero image" />
+          <div class="image-fallback" id="heroFallback">
+            <span class="inline-lang active" data-inline="en">Hero Image Placeholder</span>
+            <span class="inline-lang" data-inline="hu">Fő kép helye</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="about">
+    <svg class="leaf-decor leaf-about-left" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M120 175C123 124 145 74 181 34C182 87 162 141 120 175Z" fill="#7fa08f"/>
+      <path d="M102 173C95 134 70 96 28 65C31 109 55 149 102 173Z" fill="#3f7158"/>
+      <path d="M109 176C108 144 108 111 111 77" stroke="#2f5d46" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">
+            <span class="inline-lang active" data-inline="en">About Us</span>
+            <span class="inline-lang" data-inline="hu">Rólunk</span>
+          </div>
+          <h2>
+            <span class="inline-lang active" data-inline="en">Meet the barbers</span>
+            <span class="inline-lang" data-inline="hu">Ismerd meg a borbélyokat</span>
+          </h2>
+        </div>
+        <p>
+          <span class="inline-lang active" data-inline="en">
+            Strong cuts, calm atmosphere, and a modern barbershop identity with a softer black-and-white palette.
+          </span>
+          <span class="inline-lang" data-inline="hu">
+            Erőteljes vágások, nyugodt légkör és modern barber arculat egy lágyabb fekete-fehér színvilággal.
+          </span>
+        </p>
+      </div>
+
+      <div class="about-grid">
+        <article class="barber-card">
+          <div class="barber-photo image-frame">
+            <img id="sanyiImg" class="barber-img" src="" alt="Sanyi barber photo" />
+            <div class="image-fallback" id="sanyiFallback">
+              <span class="inline-lang active" data-inline="en">Sanyi Photo Placeholder</span>
+              <span class="inline-lang" data-inline="hu">Sanyi fotójának helye</span>
+            </div>
+          </div>
+          <div class="barber-info">
+            <h3>Sanyi</h3>
+            <div class="barber-role">
+              <span class="inline-lang active" data-inline="en">Barber</span>
+              <span class="inline-lang" data-inline="hu">Barber</span>
+            </div>
+            <p class="quote">
+              <span class="inline-lang active" data-inline="en">“A clean cut is confidence you wear every day.”</span>
+              <span class="inline-lang" data-inline="hu">„Egy tiszta vágás olyan magabiztosság, amit minden nap viselsz.”</span>
+            </p>
+          </div>
+        </article>
+
+        <article class="barber-card">
+          <div class="barber-photo image-frame">
+            <img id="roliImg" class="barber-img" src="" alt="Roli barber photo" />
+            <div class="image-fallback" id="roliFallback">
+              <span class="inline-lang active" data-inline="en">Roli Photo Placeholder</span>
+              <span class="inline-lang" data-inline="hu">Roli fotójának helye</span>
+            </div>
+          </div>
+          <div class="barber-info">
+            <h3>Roli</h3>
+            <div class="barber-role">
+              <span class="inline-lang active" data-inline="en">Barber</span>
+              <span class="inline-lang" data-inline="hu">Barber</span>
+            </div>
+            <p class="quote">
+              <span class="inline-lang active" data-inline="en">“Minimal style. Maximum detail.”</span>
+              <span class="inline-lang" data-inline="hu">„Minimális stílus. Maximális részletesség.”</span>
+            </p>
+          </div>
+        </article>
+
+        <article class="barber-card">
+          <div class="barber-photo image-frame">
+            <img id="mateImg" class="barber-img" src="" alt="Máté barber photo" />
+            <div class="image-fallback" id="mateFallback">
+              <span class="inline-lang active" data-inline="en">Máté Photo Placeholder</span>
+              <span class="inline-lang" data-inline="hu">Máté fotójának helye</span>
+            </div>
+          </div>
+          <div class="barber-info">
+            <h3>Máté</h3>
+            <div class="barber-role">
+              <span class="inline-lang active" data-inline="en">Barber</span>
+              <span class="inline-lang" data-inline="hu">Barber</span>
+            </div>
+            <p class="quote">
+              <span class="inline-lang active" data-inline="en">“Good grooming is subtle, sharp, and unforgettable.”</span>
+              <span class="inline-lang" data-inline="hu">„A jó megjelenés visszafogott, éles és emlékezetes.”</span>
+            </p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">
+            <span class="inline-lang active" data-inline="en">Gallery</span>
+            <span class="inline-lang" data-inline="hu">Galéria</span>
+          </div>
+          <h2>
+            <span class="inline-lang active" data-inline="en">Style showcase</span>
+            <span class="inline-lang" data-inline="hu">Stílusok bemutatása</span>
+          </h2>
+        </div>
+        <p>
+          <span class="inline-lang active" data-inline="en">
+            Featured cuts and inspiration in a cleaner, brighter visual frame.
+          </span>
+          <span class="inline-lang" data-inline="hu">
+            Kiemelt frizurák és inspiráció egy világosabb, letisztult vizuális keretben.
+          </span>
+        </p>
+      </div>
+
+      <div class="gallery-wrap">
+        <div class="carousel">
+          <div class="slide active">
+            <div class="slide-inner">
+              <div class="slide-image image-frame">
+                <img id="galleryImg1" class="gallery-img" src="" alt="Gallery hairstyle 1" />
+                <div class="image-fallback" id="galleryFallback1">
+                  <span class="inline-lang active" data-inline="en">Hair Model Image Placeholder 1</span>
+                  <span class="inline-lang" data-inline="hu">Frizura kép helye 1</span>
+                </div>
+              </div>
+              <div class="slide-copy">
+                <h3>
+                  <span class="inline-lang active" data-inline="en">Textured Crop</span>
+                  <span class="inline-lang" data-inline="hu">Texturált crop</span>
+                </h3>
+                <p>
+                  <span class="inline-lang active" data-inline="en">Sharp outline, natural movement, effortless finish.</span>
+                  <span class="inline-lang" data-inline="hu">Éles kontúrok, természetes mozgás, könnyed befejezés.</span>
+                </p>
+                <span class="eyebrow" style="margin:0;">
+                  <span class="inline-lang active" data-inline="en">Style 01</span>
+                  <span class="inline-lang" data-inline="hu">Stílus 01</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide">
+            <div class="slide-inner">
+              <div class="slide-image image-frame">
+                <img id="galleryImg2" class="gallery-img" src="" alt="Gallery hairstyle 2" />
+                <div class="image-fallback" id="galleryFallback2">
+                  <span class="inline-lang active" data-inline="en">Hair Model Image Placeholder 2</span>
+                  <span class="inline-lang" data-inline="hu">Frizura kép helye 2</span>
+                </div>
+              </div>
+              <div class="slide-copy">
+                <h3>
+                  <span class="inline-lang active" data-inline="en">Classic Fade</span>
+                  <span class="inline-lang" data-inline="hu">Klasszikus fade</span>
+                </h3>
+                <p>
+                  <span class="inline-lang active" data-inline="en">Timeless balance, clean transitions, premium silhouette.</span>
+                  <span class="inline-lang" data-inline="hu">Időtálló egyensúly, tiszta átmenetek, prémium forma.</span>
+                </p>
+                <span class="eyebrow" style="margin:0;">
+                  <span class="inline-lang active" data-inline="en">Style 02</span>
+                  <span class="inline-lang" data-inline="hu">Stílus 02</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide">
+            <div class="slide-inner">
+              <div class="slide-image image-frame">
+                <img id="galleryImg3" class="gallery-img" src="" alt="Gallery hairstyle 3" />
+                <div class="image-fallback" id="galleryFallback3">
+                  <span class="inline-lang active" data-inline="en">Hair Model Image Placeholder 3</span>
+                  <span class="inline-lang" data-inline="hu">Frizura kép helye 3</span>
+                </div>
+              </div>
+              <div class="slide-copy">
+                <h3>
+                  <span class="inline-lang active" data-inline="en">Slick Back</span>
+                  <span class="inline-lang" data-inline="hu">Hátrafésült stílus</span>
+                </h3>
+                <p>
+                  <span class="inline-lang active" data-inline="en">Controlled volume, polished finish, bold character.</span>
+                  <span class="inline-lang" data-inline="hu">Kontrollált volumen, kifinomult lezárás, karakteres megjelenés.</span>
+                </p>
+                <span class="eyebrow" style="margin:0;">
+                  <span class="inline-lang active" data-inline="en">Style 03</span>
+                  <span class="inline-lang" data-inline="hu">Stílus 03</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel-controls">
+          <div class="control-buttons">
+            <button class="icon-btn" id="prevSlide" aria-label="Previous slide">←</button>
+            <button class="icon-btn" id="nextSlide" aria-label="Next slide">→</button>
+          </div>
+          <div class="dots" id="dots"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <svg class="leaf-decor leaf-contact-right" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M54 168C86 140 112 100 131 46C91 71 66 111 54 168Z" fill="#3f7158"/>
+      <path d="M77 179C121 158 153 126 173 77C129 95 97 126 77 179Z" fill="#7fa08f"/>
+      <path d="M69 173C85 143 99 114 117 76" stroke="#2f5d46" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">
+            <span class="inline-lang active" data-inline="en">Contact</span>
+            <span class="inline-lang" data-inline="hu">Kapcsolat</span>
+          </div>
+          <h2>
+            <span class="inline-lang active" data-inline="en">Visit the studio</span>
+            <span class="inline-lang" data-inline="hu">Látogass el hozzánk</span>
+          </h2>
+        </div>
+        <p>
+          <span class="inline-lang active" data-inline="en">Contact details and a placeholder for Google Maps.</span>
+          <span class="inline-lang" data-inline="hu">Elérhetőségek és helykitöltő a Google Térkép számára.</span>
+        </p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="card">
+          <h3 style="font-size:1.5rem; text-transform:uppercase; font-weight:900;">
+            <span class="inline-lang active" data-inline="en">Contact Information</span>
+            <span class="inline-lang" data-inline="hu">Kapcsolati információk</span>
+          </h3>
+
+          <div class="info-list">
+            <div class="info-item">
+              <strong>
+                <span class="inline-lang active" data-inline="en">Address</span>
+                <span class="inline-lang" data-inline="hu">Cím</span>
+              </strong>
+              <span>123 Barber Street, Downtown City</span>
+            </div>
+            <div class="info-item">
+              <strong>
+                <span class="inline-lang active" data-inline="en">Phone</span>
+                <span class="inline-lang" data-inline="hu">Telefon</span>
+              </strong>
+              <span>+36 30 123 4567</span>
+            </div>
+            <div class="info-item">
+              <strong>Email</strong>
+              <span>hello@movement.fake</span>
+            </div>
+            <div class="info-item">
+              <strong>
+                <span class="inline-lang active" data-inline="en">Opening Hours</span>
+                <span class="inline-lang" data-inline="hu">Nyitvatartás</span>
+              </strong>
+              <span>
+                <span class="inline-lang active" data-inline="en">Mon–Fri: 10:00–20:00<br>Sat: 10:00–16:00<br>Sun: Closed</span>
+                <span class="inline-lang" data-inline="hu">H–P: 10:00–20:00<br>Szo: 10:00–16:00<br>V: Zárva</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="map-placeholder">
+            <span class="inline-lang active" data-inline="en"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2695.3451924561095!2d19.11492787552342!3d47.50266829514999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741ddb2f8c9c0a5%3A0x43991b31756412a5!2sMOVEMENT%20barber%20shop!5e0!3m2!1sen!2shu!4v1776936639126!5m2!1sen!2shu" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></span>
+            <span class="inline-lang" data-inline="hu"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2695.3451924561095!2d19.11492787552342!3d47.50266829514999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741ddb2f8c9c0a5%3A0x43991b31756412a5!2sMOVEMENT%20barber%20shop!5e0!3m2!1sen!2shu!4v1776936639126!5m2!1sen!2shu" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="booking">
+    <svg class="leaf-decor leaf-booking-left" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M119 168C117 132 133 89 168 45C173 89 157 138 119 168Z" fill="#7fa08f"/>
+      <path d="M95 164C85 126 60 96 24 70C25 112 46 145 95 164Z" fill="#3f7158"/>
+      <path d="M108 171C106 143 105 115 104 82" stroke="#2f5d46" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">
+            <span class="inline-lang active" data-inline="en">Booking</span>
+            <span class="inline-lang" data-inline="hu">Foglalás</span>
+          </div>
+          <h2>
+            <span class="inline-lang active" data-inline="en">Book a 1-hour appointment</span>
+            <span class="inline-lang" data-inline="hu">Foglalj 1 órás időpontot</span>
+          </h2>
+        </div>
+        <p>
+          <span class="inline-lang active" data-inline="en">
+            Demo booking engine. Select a barber, choose a free slot, and confirm.
+          </span>
+          <span class="inline-lang" data-inline="hu">
+            Bemutató foglalási rendszer. Válassz barbert, szabad időpontot, majd erősítsd meg a foglalást.
+          </span>
+        </p>
+      </div>
+
+      <div class="booking-grid">
+        <aside class="card booking-sidebar">
+          <h3 style="font-size:1.5rem; text-transform:uppercase; font-weight:900;">
+            <span class="inline-lang active" data-inline="en">Choose your barber</span>
+            <span class="inline-lang" data-inline="hu">Válassz barbert</span>
+          </h3>
+          <p>
+            <span class="inline-lang active" data-inline="en">Select a barber to view available time slots.</span>
+            <span class="inline-lang" data-inline="hu">Válassz egy barbert az elérhető időpontok megtekintéséhez.</span>
+          </p>
+
+          <div class="barber-select">
+            <button class="select-btn active" data-barber="Sanyi">Sanyi</button>
+            <button class="select-btn" data-barber="Roli">Roli</button>
+            <button class="select-btn" data-barber="Máté">Máté</button>
+          </div>
+        </aside>
+
+        <div class="card booking-panel">
+          <h3 id="bookingTitle">Available slots for Sanyi</h3>
+          <p id="bookingSubtext">Each appointment lasts 1 hour.</p>
+
+          <div class="slot-grid" id="slotGrid"></div>
+
+          <form class="booking-form" id="bookingForm">
+            <input type="text" id="customerName" placeholder="Your name" required />
+            <input type="email" id="customerEmail" placeholder="Your email" required />
+            <button type="submit" class="btn btn-primary" id="confirmBtn">Confirm Booking</button>
+          </form>
+
+          <div class="booking-summary" id="bookingSummary">
+            Selected barber: <strong>Sanyi</strong><br>
+            Selected time: <strong>None</strong>
+          </div>
+
+          <div class="success" id="successMessage" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <span class="inline-lang active" data-inline="en">© 2026 Movement — Men’s Hairdressing & Barbering</span>
+      <span class="inline-lang" data-inline="hu">© 2026 Movement — Férfi fodrászat és barber</span>
+    </div>
+  </footer>
+
+  <script src="images.js"></script>
+  <script>
+    function setupImage(imgId, fallbackId, path){
+      const img = document.getElementById(imgId);
+      const fallback = document.getElementById(fallbackId);
+      if(!img) return;
+
+      img.style.display = 'block';
+      img.src = path || '';
+
+      img.onload = () => {
+        if(fallback) fallback.style.display = 'none';
+        img.style.display = 'block';
+      };
+
+      img.onerror = () => {
+        img.style.display = 'none';
+        if(fallback) fallback.style.display = 'flex';
+      };
+    }
+
+    setupImage('logoImg', 'logoFallback', IMAGE_PATHS.logo);
+    setupImage('heroImg', 'heroFallback', IMAGE_PATHS.hero);
+    setupImage('sanyiImg', 'sanyiFallback', IMAGE_PATHS.barbers.sanyi);
+    setupImage('roliImg', 'roliFallback', IMAGE_PATHS.barbers.roli);
+    setupImage('mateImg', 'mateFallback', IMAGE_PATHS.barbers.mate);
+    setupImage('galleryImg1', 'galleryFallback1', IMAGE_PATHS.gallery[0]);
+    setupImage('galleryImg2', 'galleryFallback2', IMAGE_PATHS.gallery[1]);
+    setupImage('galleryImg3', 'galleryFallback3', IMAGE_PATHS.gallery[2]);
+
+    let currentLang = 'en';
+    const langButtons = document.querySelectorAll('.lang-btn');
+    const inlineLangItems = document.querySelectorAll('.inline-lang');
+
+    function setLanguage(lang){
+      currentLang = lang;
+      inlineLangItems.forEach(el => {
+        el.classList.remove('active');
+        if(el.dataset.inline === lang) el.classList.add('active');
+      });
+      langButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.setLang === lang);
+      });
+      updateBookingTexts();
+    }
+
+    langButtons.forEach(btn => {
+      btn.addEventListener('click', () => setLanguage(btn.dataset.setLang));
+    });
+
+    const slides = document.querySelectorAll('.slide');
+    const dotsContainer = document.getElementById('dots');
+    const prevSlideBtn = document.getElementById('prevSlide');
+    const nextSlideBtn = document.getElementById('nextSlide');
+    let currentSlide = 0;
+
+    function renderDots(){
+      dotsContainer.innerHTML = '';
+      slides.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.className = 'dot' + (index === currentSlide ? ' active' : '');
+        dot.addEventListener('click', () => {
+          currentSlide = index;
+          updateCarousel();
+        });
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    function updateCarousel(){
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+      });
+      renderDots();
+    }
+
+    prevSlideBtn.addEventListener('click', () => {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      updateCarousel();
+    });
+
+    nextSlideBtn.addEventListener('click', () => {
+      currentSlide = (currentSlide + 1) % slides.length;
+      updateCarousel();
+    });
+
+    renderDots();
+
+    const barberButtons = document.querySelectorAll('.select-btn');
+    const slotGrid = document.getElementById('slotGrid');
+    const bookingTitle = document.getElementById('bookingTitle');
+    const bookingSubtext = document.getElementById('bookingSubtext');
+    const customerName = document.getElementById('customerName');
+    const customerEmail = document.getElementById('customerEmail');
+    const confirmBtn = document.getElementById('confirmBtn');
+    const bookingSummary = document.getElementById('bookingSummary');
+    const bookingForm = document.getElementById('bookingForm');
+    const successMessage = document.getElementById('successMessage');
+
+    const timeSlots = [
+      "10:00 - 11:00",
+      "11:00 - 12:00",
+      "12:00 - 13:00",
+      "13:00 - 14:00",
+      "14:00 - 15:00",
+      "15:00 - 16:00",
+      "16:00 - 17:00",
+      "17:00 - 18:00",
+      "18:00 - 19:00"
+    ];
+
+    const bookedSlots = {
+      "Sanyi": ["11:00 - 12:00", "15:00 - 16:00"],
+      "Roli": ["10:00 - 11:00", "14:00 - 15:00"],
+      "Máté": ["12:00 - 13:00", "17:00 - 18:00"]
+    };
+
+    let selectedBarber = "Sanyi";
+    let selectedSlot = null;
+
+    function updateBookingTexts(){
+      if(currentLang === 'en'){
+        bookingTitle.textContent = `Available slots for ${selectedBarber}`;
+        bookingSubtext.textContent = 'Each appointment lasts 1 hour.';
+        customerName.placeholder = 'Your name';
+        customerEmail.placeholder = 'Your email';
+        confirmBtn.textContent = 'Confirm Booking';
+        bookingSummary.innerHTML =
+          `Selected barber: <strong>${selectedBarber}</strong><br>Selected time: <strong>${selectedSlot || 'None'}</strong>`;
+      } else {
+        bookingTitle.textContent = `${selectedBarber} elérhető időpontjai`;
+        bookingSubtext.textContent = 'Minden foglalás 1 órás.';
+        customerName.placeholder = 'Neved';
+        customerEmail.placeholder = 'Email címed';
+        confirmBtn.textContent = 'Foglalás megerősítése';
+        bookingSummary.innerHTML =
+          `Választott barber: <strong>${selectedBarber}</strong><br>Választott időpont: <strong>${selectedSlot || 'Nincs'}</strong>`;
+      }
+    }
+
+    function renderSlots(){
+      slotGrid.innerHTML = '';
+      timeSlots.forEach(time => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = time;
+        btn.className = 'slot';
+
+        const isBooked = bookedSlots[selectedBarber].includes(time);
+        if(isBooked){
+          btn.classList.add('booked');
+          btn.disabled = true;
+        }
+
+        if(selectedSlot === time){
+          btn.classList.add('selected');
+        }
+
+        btn.addEventListener('click', () => {
+          selectedSlot = time;
+          updateBookingTexts();
+          renderSlots();
+        });
+
+        slotGrid.appendChild(btn);
+      });
+      updateBookingTexts();
+    }
+
+    barberButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        barberButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        selectedBarber = button.dataset.barber;
+        selectedSlot = null;
+        successMessage.style.display = 'none';
+        renderSlots();
+      });
+    });
+
+    bookingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = customerName.value.trim();
+      const email = customerEmail.value.trim();
+
+      if(!selectedSlot){
+        alert(currentLang === 'en'
+          ? 'Please select a time slot first.'
+          : 'Kérlek, először válassz egy időpontot.');
+        return;
+      }
+
+      if(!name || !email){
+        alert(currentLang === 'en'
+          ? 'Please fill in your name and email.'
+          : 'Kérlek, töltsd ki a nevet és az email címet.');
+        return;
+      }
+
+      bookedSlots[selectedBarber].push(selectedSlot);
+
+      successMessage.style.display = 'block';
+      successMessage.textContent = currentLang === 'en'
+        ? `Booking confirmed for ${name} with ${selectedBarber} at ${selectedSlot}. Confirmation sent to ${email}.`
+        : `Foglalás sikeresen rögzítve: ${name}, ${selectedBarber}, ${selectedSlot}. Visszaigazolás elküldve erre: ${email}.`;
+
+      bookingForm.reset();
+      selectedSlot = null;
+      renderSlots();
+    });
+
+    renderSlots();
+    setLanguage('en');
+  </script>
+</body>
+</html>
