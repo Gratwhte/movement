@@ -128,13 +128,13 @@
     }
 
     .nav{
-      position:sticky;
-      top:0;
-      z-index:1000;
-      background: rgba(243,243,241,.88);
-      backdrop-filter: blur(10px);
-      border-bottom:1px solid rgba(17,17,17,.08);
-    }
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:#000000;
+  backdrop-filter: blur(10px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
 
     .nav-inner{
       display:flex;
@@ -151,19 +151,19 @@
     }
 
     .brand-logo-horizontal{
-      width:260px;
-      height:64px;
-      border:1px solid rgba(17,17,17,.1);
-      border-radius:12px;
-      overflow:hidden;
-      background:#fff;
-      flex-shrink:0;
-    }
+  width:260px;
+  height:64px;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;
+  overflow:hidden;
+  background:#000000;
+  flex-shrink:0;
+}
 
     .brand-logo-horizontal .logo-img{
-      object-fit:contain;
-      background:#fff;
-    }
+  object-fit:contain;
+  background:#000000;
+}
 
     .nav-right{
       display:flex;
@@ -180,18 +180,18 @@
     }
 
     .nav-links a{
-      color:var(--muted);
-      font-size:.94rem;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      position:relative;
-      transition:.2s ease;
-      font-weight:700;
-    }
+  color:rgba(255,255,255,.72);
+  font-size:.94rem;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  position:relative;
+  transition:.2s ease;
+  font-weight:700;
+}
 
     .nav-links a:hover{
-      color:var(--text);
-    }
+  color:#ffffff;
+}
 
     .nav-links a::after{
       content:"";
@@ -215,25 +215,31 @@
     }
 
     .lang-btn{
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid rgba(17,17,17,.08);
-      background:#ffffff;
-      color:var(--muted);
-      cursor:pointer;
-      transition:.2s ease;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      font-size:.8rem;
-      font-weight:700;
-    }
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.04);
+  color:rgba(255,255,255,.72);
+  cursor:pointer;
+  transition:.2s ease;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-size:.8rem;
+  font-weight:700;
+}
 
     .lang-btn.active,
-    .lang-btn:hover{
-      color:var(--text);
-      border-color:var(--green-2);
-      background:rgba(63,113,88,.08);
-    }
+.lang-btn:hover{
+  color:#ffffff;
+  border-color:var(--green-2);
+  background:rgba(63,113,88,.22);
+}
+
+    .brand .image-fallback{
+  background:#000000;
+  color:rgba(255,255,255,.7);
+  border:1px dashed rgba(255,255,255,.2);
+}
 
     .hero{
       min-height:88vh;
