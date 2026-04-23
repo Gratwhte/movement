@@ -1268,6 +1268,7 @@
     setupImage('galleryImg1', 'galleryFallback1', IMAGE_PATHS.gallery[0]);
     setupImage('galleryImg2', 'galleryFallback2', IMAGE_PATHS.gallery[1]);
     setupImage('galleryImg3', 'galleryFallback3', IMAGE_PATHS.gallery[2]);
+    document.getElementById('faviconTag').href = IMAGE_PATHS.favicon;
 
     let currentLang = 'en';
     const langButtons = document.querySelectorAll('.lang-btn');
@@ -1453,7 +1454,7 @@
 
     renderSlots();
     setLanguage('en');
-    document.getElementById('faviconTag').href = IMAGE_PATHS.favicon;
+    
   </script>
 </body>
 </html>
